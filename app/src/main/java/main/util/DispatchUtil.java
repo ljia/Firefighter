@@ -43,7 +43,7 @@ public class DispatchUtil {
     }
 
     List<Map.Entry<Firefighter, CityNode>> moves = new ArrayList<>();
-    findShortestPath(0, moves, firefighters, burningSites);
+    findShortestPath(0, moves, firefighters, burningSites, new ArrayList<>());
 
     return moves;
   }
@@ -52,12 +52,13 @@ public class DispatchUtil {
       int distanceSoFar,
       List<Map.Entry<Firefighter, CityNode>> moves,
       List<Firefighter> firefighters,
-      List<Building> sites) {
+      List<Building> sites,
+      List<Building> sitesToSkip) {
 
-    List<Building> burningSites =
-        sites.stream().filter(Building::isBurning).collect(Collectors.toList());
+    List<Building> sitesToVisit =
+        sites.stream().filter(s -> !sitesToSkip.contains(s)).collect(Collectors.toList());
 
-    if (burningSites.size() == 0) {
+    if (sitesToVisit.size() == 0) {
       return distanceSoFar;
     }
 
@@ -65,7 +66,7 @@ public class DispatchUtil {
     List<Map.Entry<Firefighter, CityNode>> bestMoves = null;
     int currentDistance;
 
-    for (Building site : burningSites) {
+    for (Building site : sitesToVisit) {
       Firefighter firefighter = findClosestFirefighterToSite(firefighters, site);
 
       List<Map.Entry<Firefighter, CityNode>> newMoves = new ArrayList<>();
@@ -76,12 +77,7 @@ public class DispatchUtil {
       firefighter.travelTo(site.getLocation());
       newMoves.add(new SimpleEntry<>(firefighter, site.getLocation()));
 
-      try {
-        site.extinguishFire();
-      } catch (NoFireFoundException e) {
-        // swallow since we know that it's safe
-        System.out.println("Cannot extinguishFire. This should never happen");
-      }
+      sitesToSkip.add(site);
 
       currentDistance =
           findShortestPath(
@@ -89,19 +85,15 @@ public class DispatchUtil {
                   + calculateDistanceBetweenTwoNodes(locationBeforeMove, firefighter.getLocation()),
               newMoves,
               firefighters,
-              burningSites);
+              sitesToVisit,
+              sitesToSkip);
 
       if (currentDistance < shortestDistance) {
         shortestDistance = currentDistance;
         bestMoves = newMoves;
       }
-      // FIXME: setFire() should not be used
-      try {
-        site.setFire();
-      } catch (FireproofBuildingException e) {
-        // swallow since we know that it's safe
-        System.out.println("Cannot setFire. This should never happen");
-      }
+
+      sitesToSkip.remove(site);
 
       firefighter.travelTo(locationBeforeMove);
     }
