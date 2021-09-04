@@ -10,8 +10,8 @@ public interface Firefighter {
   CityNode getLocation();
 
   /**
-   * Get the total distance traveled by this firefighter. Distances should be represented using TaxiCab
-   * Geometry: https://en.wikipedia.org/wiki/Taxicab_geometry
+   * Get the total distance traveled by this firefighter. Distances should be represented using
+   * TaxiCab Geometry: https://en.wikipedia.org/wiki/Taxicab_geometry
    *
    * @return the total distance traveled by this firefighter
    */
@@ -19,7 +19,13 @@ public interface Firefighter {
 
   /**
    * Move the firefighter to destination and calculate distanceTraveled
+   *
    * @param destination the {@link CityNode} to travel to
    */
   void travelTo(CityNode destination);
+
+  /**
+   * Reset distanceTraveled to 0
+   */
+  void resetDistanceTraveled();
 }

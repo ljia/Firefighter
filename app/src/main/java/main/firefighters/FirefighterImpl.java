@@ -3,6 +3,9 @@ package main.firefighters;
 import main.api.CityNode;
 import main.api.Firefighter;
 
+import java.util.AbstractMap;
+import java.util.ArrayList;
+
 public class FirefighterImpl implements Firefighter {
   private CityNode location;
   private int distanceTraveled;
@@ -28,6 +31,11 @@ public class FirefighterImpl implements Firefighter {
   public void travelTo(CityNode destination) {
     this.distanceTraveled += calculateDistance(location, destination);
     this.location = destination;
+  }
+
+  @Override
+  public void resetDistanceTraveled() {
+    this.distanceTraveled = 0;
   }
 
   private int calculateDistance(CityNode src, CityNode dest) {
