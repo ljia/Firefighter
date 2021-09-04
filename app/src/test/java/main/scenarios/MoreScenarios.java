@@ -1,6 +1,4 @@
 /*
- * Copyright (c) 2020 Learnta, Inc.
- * All right reserved.
  * @auther  Allen Jia
  * @created 2021/09/04 9:14 AM
  */
