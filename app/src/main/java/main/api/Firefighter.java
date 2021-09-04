@@ -16,4 +16,10 @@ public interface Firefighter {
    * @return the total distance traveled by this firefighter
    */
   int distanceTraveled();
+
+  /**
+   * Move the firefighter to destination and calculate distanceTraveled
+   * @param destination the {@link CityNode} to travel to
+   */
+  void travelTo(CityNode destination);
 }
