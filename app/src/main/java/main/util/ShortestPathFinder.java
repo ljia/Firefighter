@@ -76,7 +76,7 @@ public class ShortestPathFinder {
       sitesToSkip.remove(site);
     }
 
-    return distanceSoFar + shortestDistance;
+    return shortestDistance;
   }
 
   private static int calculateMinDistanceToOneSite(List<Location> locations, Location site) {

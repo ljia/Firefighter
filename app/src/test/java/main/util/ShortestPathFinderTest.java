@@ -37,8 +37,39 @@ public class ShortestPathFinderTest {
             Location.of(0, 0), 1, Arrays.asList(Location.of(1, 0), Location.of(0, 1))));
 
     assertEquals(
+        7,
+        ShortestPathFinder.findShortestPath(
+            Location.of(5, 0),
+            1,
+            Arrays.asList(Location.of(6, 0), Location.of(7, 0), Location.of(2, 0))));
+
+    assertEquals(
+        15,
+        ShortestPathFinder.findShortestPath(
+            Location.of(5, 0),
+            1,
+            Arrays.asList(
+                Location.of(6, 0), Location.of(7, 0), Location.of(2, 0), Location.of(5, 5))));
+
+    assertEquals(
+        9,
+        ShortestPathFinder.findShortestPath(
+            Location.of(5, 0),
+            1,
+            Arrays.asList(
+                Location.of(6, 0), Location.of(7, 0), Location.of(2, 0), Location.of(5, 1))));
+  }
+
+  @Test
+  public void testMultiUser() {
+    assertEquals(
         2,
         ShortestPathFinder.findShortestPath(
             Location.of(0, 0), 2, Arrays.asList(Location.of(1, 0), Location.of(0, 1))));
+
+    assertEquals(
+        2,
+        ShortestPathFinder.findShortestPath(
+            Location.of(0, 0), 5, Arrays.asList(Location.of(1, 0), Location.of(0, 1))));
   }
 }
