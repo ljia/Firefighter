@@ -39,8 +39,8 @@ public class FireDispatchImpl implements FireDispatch {
   @Override
   public void dispatchFirefighers(CityNode... burningBuildings) {
     // TODO
-    if (burningBuildings == null || burningBuildings.length == 0) {
-      return;
+    if (burningBuildings == null) {
+      burningBuildings = new CityNode[] {};
     }
 
     List<Building> buildings = new ArrayList<>();
@@ -71,13 +71,14 @@ public class FireDispatchImpl implements FireDispatch {
   }
 
   private void applyMoves(List<Map.Entry<Firefighter, CityNode>> moves) {
-    moves.forEach(m -> {
-      m.getKey().travelTo(m.getValue());
-      try {
-        city.getBuilding(m.getValue()).extinguishFire();
-      } catch (NoFireFoundException e) {
-        e.printStackTrace();
-      }
-    });
+    moves.forEach(
+        m -> {
+          m.getKey().travelTo(m.getValue());
+          try {
+            city.getBuilding(m.getValue()).extinguishFire();
+          } catch (NoFireFoundException e) {
+            e.printStackTrace();
+          }
+        });
   }
 }

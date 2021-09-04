@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class DispatchUtil {
   public static List<Map.Entry<Firefighter, CityNode>> findShortestPath(
       List<Firefighter> firefighters, List<Building> burningSites) {
+
     if (firefighters == null || firefighters.size() == 0) {
       throw new IllegalArgumentException("There is no firefighter");
     }
@@ -43,6 +44,7 @@ public class DispatchUtil {
 
     List<Map.Entry<Firefighter, CityNode>> moves = new ArrayList<>();
     findShortestPath(0, moves, firefighters, burningSites);
+
     return moves;
   }
 
@@ -60,13 +62,11 @@ public class DispatchUtil {
     }
 
     int shortestDistance = Integer.MAX_VALUE;
-    Firefighter bestFirefighter = null;
-    Building bestSite = null;
     List<Map.Entry<Firefighter, CityNode>> bestMoves = null;
     int currentDistance;
 
     for (Building site : burningSites) {
-      Firefighter firefighter = findClosestFirefighterToOneSite(firefighters, site);
+      Firefighter firefighter = findClosestFirefighterToSite(firefighters, site);
 
       List<Map.Entry<Firefighter, CityNode>> newMoves = new ArrayList<>();
 
@@ -80,6 +80,7 @@ public class DispatchUtil {
         site.extinguishFire();
       } catch (NoFireFoundException e) {
         // swallow since we know that it's safe
+        System.out.println("Cannot extinguishFire. This should never happen");
       }
 
       currentDistance =
@@ -91,8 +92,6 @@ public class DispatchUtil {
               burningSites);
 
       if (currentDistance < shortestDistance) {
-        bestFirefighter = firefighter;
-        bestSite = site;
         shortestDistance = currentDistance;
         bestMoves = newMoves;
       }
@@ -101,37 +100,27 @@ public class DispatchUtil {
         site.setFire();
       } catch (FireproofBuildingException e) {
         // swallow since we know that it's safe
-
+        System.out.println("Cannot setFire. This should never happen");
       }
 
       firefighter.travelTo(locationBeforeMove);
     }
-
-    //    try {
-    //      bestFirefighter.travelTo(bestSite.getLocation(), false);
-    //    } catch (NullPointerException e) {
-    //      System.out.println("");
-    //    }
-    //    try {
-    //      bestSite.extinguishFire();
-    //    } catch (NoFireFoundException e) {
-    //      // swallow since we know that it's safe
-    //    }
 
     moves.addAll(bestMoves);
 
     return shortestDistance;
   }
 
-  private static Firefighter findClosestFirefighterToOneSite(
+  private static Firefighter findClosestFirefighterToSite(
       List<Firefighter> firefighters, Building burningSite) {
+
     int minDistance = Integer.MAX_VALUE;
     Firefighter closestFirefighter = null;
 
     for (Firefighter firefighter : firefighters) {
       int distance =
           calculateDistanceBetweenTwoNodes(firefighter.getLocation(), burningSite.getLocation());
-      if (minDistance > distance) {
+      if (distance < minDistance) {
         minDistance = distance;
         closestFirefighter = firefighter;
       }
